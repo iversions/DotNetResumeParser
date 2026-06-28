@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Maritime Resume Parser</title>
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #eef2ff;
+            color: #0f172a;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: radial-gradient(circle at top left, rgba(59, 130, 246, 0.12), transparent 28%),
+                radial-gradient(circle at bottom right, rgba(16, 185, 129, 0.08), transparent 35%),
+                #eef2ff;
+        }
+
+        .app {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px 24px;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0 24px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .navbar-brand h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            letter-spacing: -0.02em;
+            color: #0f172a;
+        }
+
+        .stats-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 0.85rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stat-value {
+            color: #334155;
+            font-weight: 600;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        }
+
+        .upload-compact {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: #ffffff;
+            padding: 6px 6px 6px 16px;
+            border-radius: 99px;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+        }
+
+        .upload-compact input[type='file'] {
+            font-size: 0.9rem;
+            color: #475569;
+            max-width: 250px;
+        }
+
+        .parse-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            height: 40px;
+            padding: 0 20px;
+            border: none;
+            border-radius: 99px;
+            background: #0f172a;
+            color: #ffffff;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .parse-button:hover:not(:disabled) {
+            background: #1e293b;
+            transform: translateY(-1px);
+        }
+
+        .parse-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .status-badge {
+            font-size: 0.85rem;
+            padding: 6px 12px;
+            border-radius: 99px;
+            background: #f1f5f9;
+            color: #475569;
+            font-weight: 500;
+        }
+        
+        .status-badge.error { background: #fee2e2; color: #b91c1c; }
+        .status-badge.success { background: #d1fae5; color: #047857; }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            height: calc(100vh - 140px);
+        }
+
+        .panel {
+            background: #ffffff;
+            border: 1px solid rgba(148, 163, 184, 0.24);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 12px 40px rgba(15, 23, 42, 0.06);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid #f1f5f9;
+            background: #fafafa;
+        }
+
+        .panel-header h2 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: #334155;
+        }
+
+        .panel-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            position: relative;
+        }
+
+        .copy-btn {
+            padding: 8px 16px;
+            background: #e2e8f0;
+            color: #334155;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: background 0.2s;
+        }
+        
+        .copy-btn:hover { background: #cbd5e1; }
+
+        .preview-area {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8fafc;
+            border-radius: 12px;
+        }
+
+        .preview-area embed,
+        .preview-area img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .json-browser {
+            height: 100%;
+            overflow-y: auto;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+            font-size: 13.5px;
+            line-height: 1.6;
+            color: #475569;
+        }
+
+        .json-node summary {
+            cursor: pointer;
+            margin: 4px 0;
+            font-weight: 500;
+            color: #64748b;
+            list-style: none;
+            user-select: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .json-node summary:hover {
+            color: #0f172a;
+        }
+
+        .json-node summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .json-node summary::before {
+            content: '▾';
+            display: inline-block;
+            font-size: 10px;
+            transform: rotate(-90deg);
+            transition: transform 0.2s;
+        }
+
+        .json-node details[open] > summary::before {
+            transform: rotate(0deg);
+        }
+
+        .json-children {
+            padding-left: 24px;
+            margin-top: 4px;
+        }
+
+        .json-leaf {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 4px 0 4px 24px;
+            padding: 4px 0;
+        }
+
+        .json-key {
+            color: #64748b;
+        }
+
+        .json-value {
+            color: #0f172a;
+            font-weight: 500;
+        }
+
+        @media (max-width: 1024px) {
+            .layout {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            .panel {
+                min-height: 600px;
+            }
+            .navbar {
+                flex-direction: column;
+                gap: 16px;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <header class="navbar">
+            <div class="navbar-brand">
+                <h1>Maritime Parser</h1>
+                <div class="status-badge" id="statusBadge">Ready</div>
+            </div>
+
+            <div class="stats-container" id="statsContainer" style="opacity: 0;">
+                <div class="stat-item">Input: <span class="stat-value" id="statInput">0</span></div>
+                <div class="stat-item">Output: <span class="stat-value" id="statOutput">0</span></div>
+                <div class="stat-item">Total: <span class="stat-value" id="statTotal">0</span></div>
+                <div class="stat-item" style="color: #059669; background: #ecfdf5; padding: 4px 10px; border-radius: 6px;">
+                    Cost: <span class="stat-value" style="color: #047857;" id="statCost">₹0.00</span>
+                </div>
+            </div>
+            
+            <div class="upload-compact">
+                <input id="resumeFile" type="file" accept=".pdf,image/*" />
+                <button id="parseBtn" class="parse-button">Parse</button>
+            </div>
+        </header>
+
+        <div class="layout">
+            <!-- Left: Preview -->
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Document Preview</h2>
+                    <span id="fileName" style="font-size: 0.85rem; color: #64748b;">No file selected</span>
+                </div>
+                <div class="panel-body">
+                    <div class="preview-area" id="previewArea">
+                        <span style="color: #94a3b8;">Upload a file to view</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right: JSON Browser -->
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Extracted Data</h2>
+                    <button id="copyJsonBtn" class="copy-btn">Copy JSON</button>
+                </div>
+                <div class="panel-body">
+                    <div id="jsonBrowser" class="json-browser">
+                        <span style="color: #94a3b8;">No extraction yet.</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <script>
+        let currentRawJson = null;
+
+        const fileInput = document.getElementById('resumeFile');
+        const parseButton = document.getElementById('parseBtn');
+        const statusBadge = document.getElementById('statusBadge');
+        const fileNameText = document.getElementById('fileName');
+        const jsonBrowser = document.getElementById('jsonBrowser');
+        const previewArea = document.getElementById('previewArea');
+        const copyJsonBtn = document.getElementById('copyJsonBtn');
+        const statsContainer = document.getElementById('statsContainer');
+        const statInput = document.getElementById('statInput');
+        const statOutput = document.getElementById('statOutput');
+        const statTotal = document.getElementById('statTotal');
+        const statCost = document.getElementById('statCost');
+
+        fileInput.addEventListener('change', () => {
+            const file = fileInput.files[0];
+            fileNameText.textContent = file ? file.name : 'No file selected';
+            previewArea.innerHTML = '';
+            resetExtractionState();
+            
+            statusBadge.textContent = 'Ready';
+            statusBadge.className = 'status-badge';
+
+            if (!file) {
+                previewArea.innerHTML = '<span style="color: #94a3b8;">Upload a file to view</span>';
+                return;
+            }
+
+            if (file.type.startsWith('image/')) {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.onload = () => URL.revokeObjectURL(img.src);
+                previewArea.appendChild(img);
+            } else if (file.type === 'application/pdf') {
+                const embed = document.createElement('embed');
+                embed.type = 'application/pdf';
+                embed.src = URL.createObjectURL(file);
+                previewArea.appendChild(embed);
+            } else {
+                const span = document.createElement('span');
+                span.textContent = 'Preview not available for this file type.';
+                previewArea.appendChild(span);
+            }
+        });
+
+        parseButton.addEventListener('click', async () => {
+            const file = fileInput.files[0];
+            if (!file) {
+                statusBadge.textContent = 'Select a file';
+                statusBadge.className = 'status-badge error';
+                return;
+            }
+
+            resetExtractionState();
+            statusBadge.textContent = 'Parsing...';
+            statusBadge.className = 'status-badge';
+            parseButton.disabled = true;
+
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                const response = await fetch('/api/resumeviewer/parse', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const text = await response.text();
+                    throw new Error(text || 'Failed to parse.');
+                }
+
+                const result = await response.json();
+                
+                if (result._metadata) {
+                    statInput.textContent = result._metadata.inputTokens.toLocaleString();
+                    statOutput.textContent = result._metadata.outputTokens.toLocaleString();
+                    statTotal.textContent = result._metadata.totalTokens.toLocaleString();
+                    statCost.textContent = `₹${result._metadata.estimatedCostInr.toFixed(3)}`;
+                    statsContainer.style.opacity = '1';
+                    
+                    // Remove metadata from raw JSON so it doesn't clutter the copy/paste payload
+                    delete result._metadata;
+                }
+
+                currentRawJson = JSON.stringify(result, null, 2);
+                renderJsonBrowser(result);
+                statusBadge.textContent = 'Success';
+                statusBadge.className = 'status-badge success';
+            } catch (ex) {
+                statusBadge.textContent = 'Parse failed';
+                statusBadge.className = 'status-badge error';
+                currentRawJson = null;
+                jsonBrowser.innerHTML = `<span style="color: #b91c1c;">${ex.message || 'An error occurred'}</span>`;
+            } finally {
+                parseButton.disabled = false;
+            }
+        });
+
+        copyJsonBtn.addEventListener('click', async () => {
+            if (!currentRawJson) return;
+            try {
+                await navigator.clipboard.writeText(currentRawJson);
+                statusBadge.textContent = 'Copied!';
+                statusBadge.className = 'status-badge success';
+                setTimeout(() => {
+                    statusBadge.textContent = 'Success';
+                }, 2000);
+            } catch (err) {
+                statusBadge.textContent = 'Copy failed';
+                statusBadge.className = 'status-badge error';
+            }
+        });
+
+        function resetExtractionState() {
+            currentRawJson = null;
+            jsonBrowser.innerHTML = '<span style="color: #94a3b8;">No extraction yet.</span>';
+            statsContainer.style.opacity = '0';
+        }
+
+        function renderJsonBrowser(data) {
+            jsonBrowser.innerHTML = '';
+            const tree = buildJsonTree(data, "Extracted Record");
+            if (tree) {
+                jsonBrowser.appendChild(tree);
+            } else {
+                jsonBrowser.innerHTML = '<span style="color: #94a3b8;">No data extracted.</span>';
+            }
+        }
+
+        function isEmpty(val) {
+            if (val === null) return true;
+            if (Array.isArray(val)) return val.length === 0 || val.every(isEmpty);
+            if (typeof val === 'object') return Object.keys(val).length === 0 || Object.values(val).every(isEmpty);
+            if (typeof val === 'string') return val.trim() === '';
+            return false;
+        }
+
+        function buildJsonTree(value, keyName = null) {
+            const node = document.createElement('div');
+            node.className = 'json-node';
+
+            if (value !== null && typeof value === 'object') {
+                if (isEmpty(value)) return null;
+
+                const isArray = Array.isArray(value);
+                const summary = document.createElement('summary');
+                summary.textContent = keyName || (isArray ? 'List' : 'Object');
+
+                const details = document.createElement('details');
+                details.open = true; // Always open non-empty objects/arrays by default
+                details.appendChild(summary);
+
+                const childrenContainer = document.createElement('div');
+                childrenContainer.className = 'json-children';
+
+                let hasChildren = false;
+                if (isArray) {
+                    value.forEach((item, index) => {
+                        const childNode = buildJsonTree(item, `[${index}]`);
+                        if (childNode) {
+                            childrenContainer.appendChild(childNode);
+                            hasChildren = true;
+                        }
+                    });
+                } else {
+                    Object.entries(value).forEach(([childKey, childValue]) => {
+                        const childNode = buildJsonTree(childValue, childKey);
+                        if (childNode) {
+                            childrenContainer.appendChild(childNode);
+                            hasChildren = true;
+                        }
+                    });
+                }
+
+                if (!hasChildren) return null;
+
+                details.appendChild(childrenContainer);
+                node.appendChild(details);
+            } else {
+                if (isEmpty(value)) return null;
+
+                const line = document.createElement('div');
+                line.className = 'json-leaf';
+                const label = document.createElement('span');
+                label.className = 'json-key';
+                label.textContent = keyName || '';
+                const valueSpan = document.createElement('span');
+                valueSpan.className = 'json-value';
+                valueSpan.textContent = value;
+                line.appendChild(label);
+                line.appendChild(valueSpan);
+                node.appendChild(line);
+            }
+
+            return node;
+        }
+    </script>
+</body>
+</html>
