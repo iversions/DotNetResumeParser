@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "MaritimeResumeParser.Domain/1.0.0": {
+        "runtime": {
+          "MaritimeResumeParser.Domain.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "MaritimeResumeParser.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

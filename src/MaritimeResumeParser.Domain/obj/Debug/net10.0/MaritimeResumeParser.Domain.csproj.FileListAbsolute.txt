@@ -1,0 +1,11 @@
+/Users/shashi/Documents/Projects/DotNetResumeParser/src/MaritimeResumeParser.Domain/bin/Debug/net10.0/MaritimeResumeParser.Domain.deps.json
+/Users/shashi/Documents/Projects/DotNetResumeParser/src/MaritimeResumeParser.Domain/bin/Debug/net10.0/MaritimeResumeParser.Domain.dll
+/Users/shashi/Documents/Projects/DotNetResumeParser/src/MaritimeResumeParser.Domain/bin/Debug/net10.0/MaritimeResumeParser.Domain.pdb
+/Users/shashi/Documents/Projects/DotNetResumeParser/src/MaritimeResumeParser.Domain/obj/Debug/net10.0/MaritimeResumeParser.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/Users/shashi/Documents/Projects/DotNetResumeParser/src/MaritimeResumeParser.Domain/obj/Debug/net10.0/MaritimeResumeParser.Domain.AssemblyInfoInputs.cache
+/Users/shashi/Documents/Projects/DotNetResumeParser/src/MaritimeResumeParser.Domain/obj/Debug/net10.0/MaritimeResumeParser.Domain.AssemblyInfo.cs
+/Users/shashi/Documents/Projects/DotNetResumeParser/src/MaritimeResumeParser.Domain/obj/Debug/net10.0/MaritimeResumeParser.Domain.csproj.CoreCompileInputs.cache
+/Users/shashi/Documents/Projects/DotNetResumeParser/src/MaritimeResumeParser.Domain/obj/Debug/net10.0/MaritimeResumeParser.Domain.dll
+/Users/shashi/Documents/Projects/DotNetResumeParser/src/MaritimeResumeParser.Domain/obj/Debug/net10.0/refint/MaritimeResumeParser.Domain.dll
+/Users/shashi/Documents/Projects/DotNetResumeParser/src/MaritimeResumeParser.Domain/obj/Debug/net10.0/MaritimeResumeParser.Domain.pdb
+/Users/shashi/Documents/Projects/DotNetResumeParser/src/MaritimeResumeParser.Domain/obj/Debug/net10.0/ref/MaritimeResumeParser.Domain.dll

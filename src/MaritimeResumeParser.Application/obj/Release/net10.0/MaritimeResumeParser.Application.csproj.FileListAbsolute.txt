@@ -1,0 +1,15 @@
+/Users/shashi/Documents/Projects/DotNetResumeParser/src/MaritimeResumeParser.Application/bin/Release/net10.0/MaritimeResumeParser.Application.deps.json
+/Users/shashi/Documents/Projects/DotNetResumeParser/src/MaritimeResumeParser.Application/bin/Release/net10.0/MaritimeResumeParser.Application.dll
+/Users/shashi/Documents/Projects/DotNetResumeParser/src/MaritimeResumeParser.Application/bin/Release/net10.0/MaritimeResumeParser.Application.pdb
+/Users/shashi/Documents/Projects/DotNetResumeParser/src/MaritimeResumeParser.Application/bin/Release/net10.0/MaritimeResumeParser.Domain.dll
+/Users/shashi/Documents/Projects/DotNetResumeParser/src/MaritimeResumeParser.Application/bin/Release/net10.0/MaritimeResumeParser.Domain.pdb
+/Users/shashi/Documents/Projects/DotNetResumeParser/src/MaritimeResumeParser.Application/obj/Release/net10.0/MaritimeResumeParser.Application.csproj.AssemblyReference.cache
+/Users/shashi/Documents/Projects/DotNetResumeParser/src/MaritimeResumeParser.Application/obj/Release/net10.0/MaritimeResumeParser.Application.GeneratedMSBuildEditorConfig.editorconfig
+/Users/shashi/Documents/Projects/DotNetResumeParser/src/MaritimeResumeParser.Application/obj/Release/net10.0/MaritimeResumeParser.Application.AssemblyInfoInputs.cache
+/Users/shashi/Documents/Projects/DotNetResumeParser/src/MaritimeResumeParser.Application/obj/Release/net10.0/MaritimeResumeParser.Application.AssemblyInfo.cs
+/Users/shashi/Documents/Projects/DotNetResumeParser/src/MaritimeResumeParser.Application/obj/Release/net10.0/MaritimeResumeParser.Application.csproj.CoreCompileInputs.cache
+/Users/shashi/Documents/Projects/DotNetResumeParser/src/MaritimeResumeParser.Application/obj/Release/net10.0/Maritime.ED2D85A0.Up2Date
+/Users/shashi/Documents/Projects/DotNetResumeParser/src/MaritimeResumeParser.Application/obj/Release/net10.0/MaritimeResumeParser.Application.dll
+/Users/shashi/Documents/Projects/DotNetResumeParser/src/MaritimeResumeParser.Application/obj/Release/net10.0/refint/MaritimeResumeParser.Application.dll
+/Users/shashi/Documents/Projects/DotNetResumeParser/src/MaritimeResumeParser.Application/obj/Release/net10.0/MaritimeResumeParser.Application.pdb
+/Users/shashi/Documents/Projects/DotNetResumeParser/src/MaritimeResumeParser.Application/obj/Release/net10.0/ref/MaritimeResumeParser.Application.dll
